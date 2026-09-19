@@ -68,8 +68,8 @@ export default function HeroSection() {
         {/* Botões Centrais */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', justifyContent: 'center', alignItems: 'center', marginBottom: '2.5rem' }}>
           <a href="#contact" className="hero-contact-button">
-            <span className="btn-text">Entrar em Contato</span>
             <PhoneCall size={20} className="btn-icon" />
+            <span className="btn-text">Entrar em Contato</span>
           </a>
 
           <FluidGlassButton
