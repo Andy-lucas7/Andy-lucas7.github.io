@@ -1,0 +1,110 @@
+.clean-profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.clean-profile-card {
+  width: 100%;
+  width: 320px;
+  background-color: #262626;
+  border-radius: 36px;
+  padding: 16px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  transform-style: preserve-3d;
+  will-change: transform;
+  text-align: left;
+}
+
+.cpc-image-container {
+  width: 100%;
+  height: 300px;
+  border-radius: 28px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.cpc-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: translateZ(20px);
+}
+
+.cpc-content {
+  padding: 0 8px 8px 8px;
+  transform: translateZ(30px);
+}
+
+.cpc-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cpc-header h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+.cpc-bio {
+  color: #c6c6cb;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 32px 0;
+}
+
+.cpc-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cpc-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.cpc-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #e4e4e7;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cpc-stat svg {
+  color: #a1a1aa;
+}
+
+.cpc-button {
+  background-color: #585861;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.cpc-button:hover {
+  background-color: #ffffff;
+  color: black;
+}
+
+.cpc-button:active {
+  transform: scale(0.96);
+}

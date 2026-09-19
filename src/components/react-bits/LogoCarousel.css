@@ -1,0 +1,38 @@
+.logo-carousel-container {
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+  position: relative;
+  margin: 3rem 0;
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  user-select: none;
+}
+
+.logo-carousel-track {
+  display: inline-flex;
+  animation: logoScroll 30s linear infinite;
+  gap: 4rem;
+  padding-right: 4rem; /* Deve bater com o gap para o loop ser perfeito */
+}
+
+.logo-carousel-item {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.3s, transform 0.3s;
+  cursor: default;
+}
+
+.logo-carousel-item:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+@keyframes logoScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333%); } /* Renderizamos 3 vezes, então animamos até um terço */
+}
