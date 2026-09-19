@@ -1,0 +1,37 @@
+name: Deploy Portfolio
+
+on:
+  push:
+    branches: [main] # ou master, dependendo da sua branch principal
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Compilar o projeto (Build)
+        run: npm run build
+
+      - name: Fazer o upload do build para o Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist # Alinha com a pasta gerada pelo Vite
+
+      - name: Deploy no GitHub Pages
+        uses: actions/deploy-pages@v4
