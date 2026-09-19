@@ -69,10 +69,12 @@ export default function ProfileCard({
         <div className="cpc-content">
           <div className="cpc-header">
             <h3>{name}</h3>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#00b1deff" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L14.8 4.6L18.5 4.1L19.8 7.6L23 9.4L21.5 12.8L23 16.2L19.8 18L18.5 21.5L14.8 21L12 23.6L9.2 21L5.5 21.5L4.2 18L1 16.2L2.5 12.8L1 9.4L4.2 7.6L5.5 4.1L9.2 4.6L12 2Z" fill="#00f0ff" />
-              <path d="M10.5 16.5L6.5 12.5L7.9 11.1L10.5 13.7L16.1 8.1L17.5 9.5L10.5 16.5Z" fill="white" />
-            </svg>
+            {/* Logo Natura Uploaded */}
+            <img 
+              src="/natura-logo.jpg" 
+              alt="Natura Logo" 
+              style={{ width: '32px', height: '32px', borderRadius: '6px', marginLeft: '6px', objectFit: 'cover' }} 
+            />
           </div>
 
           <p className="cpc-bio">
