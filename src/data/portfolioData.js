@@ -3,7 +3,7 @@ export const portfolioData = {
     name: "Lucas Andrey",
     role: "Full Stack Developer & Data Engineer",
     status: "TRABALHANDO NA NATURA",
-    bio: "Gosto de explorar e projetar coisas que não tentei antes. Se não sei, posso aprender.",
+    bio: "\"Gosto de explorar e projetar coisas que não tentei antes. Se não sei, posso aprender.\" - Lucas Andrey, 2026",
     location: "Remoto",
     stats: [
       { label: "Foco Atual", value: "Databricks & Analytics" },
