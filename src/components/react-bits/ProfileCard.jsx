@@ -7,7 +7,7 @@ export default function ProfileCard({
   name = 'Lucas Andrey',
   title = 'Full Stack / Data Eng.',
   handle = 'Andy-lucas7',
-  status = 'Trabalhando na Natura',
+  status = 'Atualmente trabalhando na Natura',
   contactText = 'Follow +',
   onContactClick
 }) {
@@ -36,10 +36,10 @@ export default function ProfileCard({
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    
+
     const rotateX = ((y - centerY) / centerY) * -10;
     const rotateY = ((x - centerX) / centerX) * 10;
-    
+
     setRotation({ x: rotateX, y: rotateY });
   };
 
@@ -48,13 +48,13 @@ export default function ProfileCard({
   };
 
   return (
-    <div 
+    <div
       className="clean-profile-wrapper"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ perspective: '1000px' }}
     >
-      <div 
+      <div
         ref={cardRef}
         className="clean-profile-card"
         style={{
@@ -65,20 +65,20 @@ export default function ProfileCard({
         <div className="cpc-image-container">
           <img src={avatarUrl} alt={name} className="cpc-image" />
         </div>
-        
+
         <div className="cpc-content">
           <div className="cpc-header">
             <h3>{name}</h3>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#00b1deff" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L14.8 4.6L18.5 4.1L19.8 7.6L23 9.4L21.5 12.8L23 16.2L19.8 18L18.5 21.5L14.8 21L12 23.6L9.2 21L5.5 21.5L4.2 18L1 16.2L2.5 12.8L1 9.4L4.2 7.6L5.5 4.1L9.2 4.6L12 2Z" fill="#00f0ff"/>
-              <path d="M10.5 16.5L6.5 12.5L7.9 11.1L10.5 13.7L16.1 8.1L17.5 9.5L10.5 16.5Z" fill="white"/>
+              <path d="M12 2L14.8 4.6L18.5 4.1L19.8 7.6L23 9.4L21.5 12.8L23 16.2L19.8 18L18.5 21.5L14.8 21L12 23.6L9.2 21L5.5 21.5L4.2 18L1 16.2L2.5 12.8L1 9.4L4.2 7.6L5.5 4.1L9.2 4.6L12 2Z" fill="#00f0ff" />
+              <path d="M10.5 16.5L6.5 12.5L7.9 11.1L10.5 13.7L16.1 8.1L17.5 9.5L10.5 16.5Z" fill="white" />
             </svg>
           </div>
-          
+
           <p className="cpc-bio">
             {title} focado na construção de sistemas modernos e escaláveis. {status}.
           </p>
-          
+
           <div className="cpc-footer">
             <div className="cpc-stats">
               <div className="cpc-stat" title="Conexões no LinkedIn">
@@ -88,7 +88,7 @@ export default function ProfileCard({
                 <FolderGit2 size={16} /> {reposCount}
               </div>
             </div>
-            
+
             <button className="cpc-button" onClick={onContactClick}>
               {contactText}
             </button>
