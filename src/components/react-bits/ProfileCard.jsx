@@ -7,7 +7,6 @@ export default function ProfileCard({
   name = 'Lucas Andrey',
   title = 'Full Stack / Data Eng.',
   handle = 'Andy-lucas7',
-  status = 'trabalhando na Natura',
   contactText = 'Follow +',
   onContactClick
 }) {
@@ -78,7 +77,7 @@ export default function ProfileCard({
           </div>
 
           <p className="cpc-bio">
-            {title} focado na construção de sistemas modernos e escaláveis. Atualmente {status}.
+            {title} focado na construção de sistemas modernos e escaláveis. Atualmente trabalhando na Natura.
           </p>
 
           <div className="cpc-footer">
