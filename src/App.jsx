@@ -15,33 +15,61 @@ import ContactFooter from './components/sections/ContactFooter';
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero');
   const [showProfile, setShowProfile] = useState(false);
+  const [showEntranceOverlay, setShowEntranceOverlay] = useState(true);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['hero', 'projects', 'tech', 'playground', 'contact'];
-      const scrollPosition = window.scrollY + 250;
+    const timer = setTimeout(() => setShowEntranceOverlay(false), 900);
+    return () => clearTimeout(timer);
+  }, []);
 
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
+  useEffect(() => {
+    const sectionIds = ['hero', 'projects', 'tech', 'playground', 'contact'];
+    let sectionBounds = [];
+    let ticking = false;
+
+    const updateBounds = () => {
+      sectionBounds = sectionIds
+        .map((id) => {
+          const el = document.getElementById(id);
+          if (!el) return null;
           const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(sectionId);
+          return { id, top, bottom: top + el.offsetHeight };
+        })
+        .filter(Boolean);
+    };
+
+    updateBounds();
+
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (sectionBounds.length === 0) updateBounds();
+        const scrollPosition = window.scrollY + 250;
+
+        for (let i = 0; i < sectionBounds.length; i++) {
+          const s = sectionBounds[i];
+          if (scrollPosition >= s.top && scrollPosition < s.bottom) {
+            setActiveSection((prev) => (prev !== s.id ? s.id : prev));
             break;
           }
         }
-      }
+        ticking = false;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', updateBounds, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateBounds);
+    };
   }, []);
 
   return (
     <div className="portfolio-app" style={{ minHeight: '100vh', position: 'relative', backgroundColor: '#030305' }}>
-      {/* Efeito de Fade / Fade Blur de Entrada Suave (sem interferir nos componentes filhos) */}
-      <div className="entrance-fade-overlay" aria-hidden="true" />
+      {/* Efeito de Fade / Fade Blur de Entrada Suave (desmontado após o término para liberar camada GPU) */}
+      {showEntranceOverlay && <div className="entrance-fade-overlay" aria-hidden="true" />}
 
       {/* Mar de Pixels em Ondas (Baseado na arquitetura da classe Pixel do React Bits) */}
       <PixelSea 
@@ -51,7 +79,7 @@ export default function App() {
       />
 
       {/* Nome no Canto Superior Esquerdo */}
-      <div style={{ position: 'fixed', top: '1.5rem', left: '1.5rem', zIndex: 1000 }}>
+      <div className="profile-pill-fixed" style={{ position: 'fixed', top: '1.5rem', left: '1.5rem', zIndex: 1000 }}>
         <AnimatePresence>
           {!showProfile && (
             <motion.div

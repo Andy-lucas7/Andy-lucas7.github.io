@@ -17,11 +17,11 @@ export default function ProjectsBento() {
   };
 
   return (
-    <section id="projects" style={{ padding: '6rem 0', position: 'relative' }}>
+    <section id="projects" className="projects-section" style={{ padding: '6rem 0', position: 'relative' }}>
       <div className="container">
         
         {/* Cabeçalho da Seção */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        <div className="section-header" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
             <Layers size={16} /> Projetos & Componentes
           </div>
@@ -34,7 +34,7 @@ export default function ProjectsBento() {
         </div>
 
         {/* Grid de Projetos com PixelCard do React Bits */}
-        <div style={{
+        <div className="projects-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '2rem'

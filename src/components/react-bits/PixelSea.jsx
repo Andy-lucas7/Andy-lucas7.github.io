@@ -33,10 +33,10 @@ class WavePixel {
     const centerOffset = (this.maxSizeInteger - this.size) * 0.5;
     
     // Gradiente sutil de cores do mar de pixels
-    if (elevationRatio > 0.6) {
-      this.ctx.fillStyle = this.colors[0]; // mais brilhante (ciano/branco)
-    } else {
-      this.ctx.fillStyle = this.colors[1] || this.color;
+    const fillStyle = elevationRatio > 0.6 ? this.colors[0] : (this.colors[1] || this.color);
+    if (this.ctx._lastFillStyle !== fillStyle) {
+      this.ctx.fillStyle = fillStyle;
+      this.ctx._lastFillStyle = fillStyle;
     }
 
     this.ctx.fillRect(
@@ -110,13 +110,16 @@ export default function PixelSea({
   colors = '#ffffff,#00f0ff,#a855f7,#7dd3fc'
 }) {
   const canvasRef = useRef(null);
+  const vignetteCanvasRef = useRef(null);
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const vignetteCanvas = vignetteCanvasRef.current;
+    if (!canvas || !vignetteCanvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
-    if (!ctx) return;
+    const vCtx = vignetteCanvas.getContext('2d');
+    if (!ctx || !vCtx) return;
 
     let animId;
     let width = (canvas.width = window.innerWidth);
@@ -126,15 +129,28 @@ export default function PixelSea({
     const colorsArray = colors.split(',');
     let pixels = [];
 
+    const drawStaticVignette = (w, h) => {
+      vignetteCanvas.width = w;
+      vignetteCanvas.height = h;
+      vCtx.clearRect(0, 0, w, h);
+      const grad = vCtx.createRadialGradient(
+        w / 2, h / 2, Math.min(w, h) * 0.4,
+        w / 2, h / 2, Math.max(w, h) * 0.85
+      );
+      grad.addColorStop(0, 'rgba(3, 3, 5, 0)');
+      grad.addColorStop(1, 'rgba(3, 3, 5, 0.7)');
+      vCtx.fillStyle = grad;
+      vCtx.fillRect(0, 0, w, h);
+    };
+
     const initGrid = () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
+      drawStaticVignette(width, height);
       pixels = [];
 
       for (let x = 0; x < width + gap; x += gap) {
         for (let y = 0; y < height + gap; y += gap) {
-          const dx = x - width / 2;
-          const dy = y - height / 2;
           const baseDelay = (Math.sin(x * 0.01) + Math.cos(y * 0.01)) * 5;
           pixels.push(new WavePixel(canvas, ctx, x, y, colorsArray, 0.04, Math.abs(baseDelay)));
         }
@@ -144,6 +160,12 @@ export default function PixelSea({
     initGrid();
 
     const handleResize = () => {
+      const newW = window.innerWidth;
+      const newH = window.innerHeight;
+      // Evita recriar todo o grid no mobile quando apenas a barra de endereço retrai/expande
+      if (newW === width && Math.abs(newH - height) < 140 && newH <= height) {
+        return;
+      }
       initGrid();
     };
 
@@ -159,52 +181,57 @@ export default function PixelSea({
       mouseRef.current.y = -9999;
     };
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+
+    const mouseRadius = 200;
+    const mouseRadiusSq = mouseRadius * mouseRadius;
 
     const render = () => {
+      if (document.hidden) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
       time += 0.025;
 
       // Fundo preto absoluto cinematográfico
       ctx.fillStyle = '#030305';
+      ctx._lastFillStyle = '#030305';
       ctx.fillRect(0, 0, width, height);
 
       const mouseX = mouseRef.current.x;
       const mouseY = mouseRef.current.y;
-      const mouseRadius = 200;
+      const isMouseActive = mouseRef.current.active;
+      const t1 = time * 0.8;
+      const t2 = time * 0.6;
+      const t3 = time * 0.4;
 
-      for (let i = 0; i < pixels.length; i++) {
+      for (let i = 0, len = pixels.length; i < len; i++) {
         const p = pixels[i];
 
         // Equação de propagação de ondas do "Mar de Pixels"
         // Cria frentes de onda senoidais entrelaçadas como o mar
-        const wave1 = Math.sin(p.x * 0.004 + time * 0.8);
-        const wave2 = Math.cos(p.y * 0.005 + p.x * 0.002 - time * 0.6);
-        const wave3 = Math.sin((p.x + p.y) * 0.003 + time * 0.4);
+        const wave1 = Math.sin(p.x * 0.004 + t1);
+        const wave2 = Math.cos(p.y * 0.005 + p.x * 0.002 - t2);
+        const wave3 = Math.sin((p.x + p.y) * 0.003 + t3);
         
         // Normalizado de 0 a 1
-        const waveNormalized = (wave1 + wave2 + wave3 + 3) / 6;
+        const waveNormalized = (wave1 + wave2 + wave3 + 3) * 0.16666667;
 
         let dist = 9999;
-        if (mouseRef.current.active) {
+        if (isMouseActive) {
           const dx = p.x - mouseX;
           const dy = p.y - mouseY;
-          dist = Math.sqrt(dx * dx + dy * dy);
+          const distSq = dx * dx + dy * dy;
+          if (distSq < mouseRadiusSq) {
+            dist = Math.sqrt(distSq);
+          }
         }
 
         p.updateWithWave(waveNormalized, dist, mouseRadius);
       }
-
-      // Vinheta de profundidade suave
-      const vignette = ctx.createRadialGradient(
-        width / 2, height / 2, Math.min(width, height) * 0.4,
-        width / 2, height / 2, Math.max(width, height) * 0.85
-      );
-      vignette.addColorStop(0, 'rgba(3, 3, 5, 0)');
-      vignette.addColorStop(1, 'rgba(3, 3, 5, 0.7)');
-      ctx.fillStyle = vignette;
-      ctx.fillRect(0, 0, width, height);
 
       animId = requestAnimationFrame(render);
     };
@@ -220,19 +247,40 @@ export default function PixelSea({
   }, [gap, speed, colors]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 0,
-        pointerEvents: 'none',
-        display: 'block'
-      }}
-      aria-hidden="true"
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 0,
+          pointerEvents: 'none',
+          display: 'block',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden',
+          willChange: 'transform'
+        }}
+        aria-hidden="true"
+      />
+      <canvas
+        ref={vignetteCanvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 0,
+          pointerEvents: 'none',
+          display: 'block',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden'
+        }}
+        aria-hidden="true"
+      />
+    </>
   );
 }

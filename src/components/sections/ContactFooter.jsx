@@ -19,11 +19,11 @@ export default function ContactFooter() {
   };
 
   return (
-    <footer id="contact" style={{ padding: '6rem 0 7rem 0', position: 'relative' }}>
+    <footer id="contact" className="contact-footer" style={{ padding: '6rem 0 7rem 0', position: 'relative' }}>
       <div className="container">
 
         {/* Card Principal de Contato */}
-        <div style={{
+        <div className="contact-card" style={{
           position: 'relative',
           textAlign: 'center',
           padding: '4rem 1.5rem',
@@ -32,14 +32,17 @@ export default function ContactFooter() {
           background: '#030305',
           border: '1px solid rgba(255, 255, 255, 0.08)',
           boxShadow: '0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden',
+          contain: 'paint'
         }}>
           {/* Efeito GhostFibers no Background */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, transform: 'translate3d(0, 0, 0)' }}>
             <GhostFibers />
           </div>
           {/* Blur de gelo leve sobre os GhostFibers */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, backdropFilter: 'blur(8px)', backgroundColor: 'rgba(255, 255, 255, 0.03)' }} />
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', backgroundColor: 'rgba(255, 255, 255, 0.03)', transform: 'translate3d(0, 0, 0)', backfaceVisibility: 'hidden', willChange: 'backdrop-filter' }} />
 
           <div style={{ position: 'relative', zIndex: 10, maxWidth: '650px', margin: '0 auto' }}>
             <span style={{
@@ -55,19 +58,20 @@ export default function ContactFooter() {
               Pronto para o Próximo Nível
             </span>
 
-            <h2 style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.2rem)', color: '#fff', marginBottom: '1.25rem'}}>
+            <h2 className="contact-title" style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.2rem)', color: '#fff', marginBottom: '1.25rem'}}>
               <ShinyText text="Vamos Criar Algo Extraordinário?" speed={9} />
             </h2>
 
-            <p style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '2.5rem', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>
+            <p className="contact-description" style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '2.5rem', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>
               Seja para um novo projeto de engenharia de dados, desenvolvimento full stack ou sistemas de alta performance, estou à disposição para colaborar.
             </p>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <div className="contact-actions" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
               <FluidGlassButton
                 href={socialLinks.find(l => l.name === 'Email')?.url || "#"}
                 variant="primary"
                 icon={Mail}
+                className="contact-fluid-btn"
               >
                 Iniciar Conversa por E-mail
               </FluidGlassButton>
@@ -76,6 +80,7 @@ export default function ContactFooter() {
                 href={socialLinks.find(l => l.name === 'GitHub')?.url || "#"}
                 variant="secondary"
                 icon={ArrowUpRight}
+                className="contact-fluid-btn"
               >
                 Explorar Código no GitHub
               </FluidGlassButton>
@@ -84,7 +89,7 @@ export default function ContactFooter() {
         </div>
 
         {/* Rodapé e Links Sociais */}
-        <div style={{
+        <div className="footer-bottom-bar" style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',

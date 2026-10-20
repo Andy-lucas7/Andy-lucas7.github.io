@@ -14,6 +14,10 @@
   animation: logoScroll 30s linear infinite;
   gap: 4rem;
   padding-right: 4rem; /* Deve bater com o gap para o loop ser perfeito */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .logo-carousel-item {
@@ -33,6 +37,6 @@
 }
 
 @keyframes logoScroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-33.333%); } /* Renderizamos 3 vezes, então animamos até um terço */
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-33.333%, 0, 0); } /* Renderizamos 3 vezes, então animamos até um terço */
 }

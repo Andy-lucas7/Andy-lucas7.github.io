@@ -14,20 +14,27 @@ export default function SpotlightCard({
   ...props
 }) {
   const cardRef = useRef(null);
-  const [coords, setCoords] = useState({ x: -1000, y: -1000 });
+  const rafRef = useRef(null);
   const [opacity, setOpacity] = useState(0);
 
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    setCoords({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      cardRef.current.style.setProperty('--mouse-x', `${clientX - rect.left}px`);
+      cardRef.current.style.setProperty('--mouse-y', `${clientY - rect.top}px`);
     });
-    setOpacity(1);
+
+    if (opacity !== 1) setOpacity(1);
   };
 
   const handleMouseLeave = () => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
     setOpacity(0);
   };
 
@@ -38,8 +45,8 @@ export default function SpotlightCard({
       onMouseLeave={handleMouseLeave}
       className={`spotlight-card-wrapper ${className}`}
       style={{
-        '--mouse-x': `${coords.x}px`,
-        '--mouse-y': `${coords.y}px`,
+        '--mouse-x': '-1000px',
+        '--mouse-y': '-1000px',
         ...style
       }}
       {...props}

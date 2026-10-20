@@ -29,21 +29,26 @@ export default function ProfileCard({
 
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
     const card = cardRef.current;
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
     const rotateX = ((y - centerY) / centerY) * -10;
     const rotateY = ((x - centerX) / centerX) * 10;
 
-    setRotation({ x: rotateX, y: rotateY });
+    card.style.transition = 'transform 0.1s ease';
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
   };
 
   const handleMouseLeave = () => {
-    setRotation({ x: 0, y: 0 });
+    if (!cardRef.current) return;
+    cardRef.current.style.transition = 'transform 0.5s ease';
+    cardRef.current.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
   };
 
   return (

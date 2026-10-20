@@ -11,12 +11,13 @@ export default function HeroSection() {
 
 
   return (
-    <section id="hero" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingTop: '7rem', paddingBottom: '3rem', position: 'relative' }}>
+    <section id="hero" className="hero-section" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingTop: '7rem', paddingBottom: '3rem', position: 'relative' }}>
       <div className="container" style={{ textAlign: 'center', maxWidth: '900px' }}>
 
         {/* Pílula de Vidro Superior (Estilo Imagem 3: • Crafting Unique Brand Identities) */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+        <div className="hero-role-pill-wrapper" style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
           <div
+            className="hero-role-pill"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -33,7 +34,7 @@ export default function HeroSection() {
               fontFamily: 'var(--font-mono)'
             }}
           >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00f0ff', boxShadow: '0 0 8px #00f0ff' }} />
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00f0ff', boxShadow: '0 0 8px #00f0ff', flexShrink: 0 }} />
             <DecryptedText
               text={personal.role}
               speed={30}
@@ -43,7 +44,7 @@ export default function HeroSection() {
         </div>
 
         {/* Título Principal */}
-        <h1 style={{
+        <h1 className="hero-title" style={{
           fontSize: 'clamp(2.8rem, 6.5vw, 5.2rem)',
           lineHeight: 1.06,
           marginBottom: '1.75rem',
@@ -55,7 +56,7 @@ export default function HeroSection() {
         </h1>
 
         {/* Subtítulo Minimalista */}
-        <p style={{
+        <p className="hero-bio" style={{
           fontSize: 'clamp(1.05rem, 2vw, 1.25rem)',
           maxWidth: '620px',
           margin: '0 auto 3rem auto',
@@ -66,7 +67,7 @@ export default function HeroSection() {
         </p>
 
         {/* Botões Centrais */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', justifyContent: 'center', alignItems: 'center', marginBottom: '2.5rem' }}>
+        <div className="hero-actions" style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', justifyContent: 'center', alignItems: 'center', marginBottom: '2.5rem' }}>
           <a href="#contact" className="hero-contact-button">
             <PhoneCall size={20} className="btn-icon" />
             <span className="btn-text">Entrar em Contato</span>
@@ -75,13 +76,14 @@ export default function HeroSection() {
           <FluidGlassButton
             href="#projects"
             icon={ArrowRight}
+            className="hero-fluid-btn"
           >
             Ver Projetos
           </FluidGlassButton>
         </div>
 
         {/* Indicador de Rolagem (Estilo Imagem 3: Scroll down to see projects) */}
-        <div style={{
+        <div className="hero-scroll-hint" style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

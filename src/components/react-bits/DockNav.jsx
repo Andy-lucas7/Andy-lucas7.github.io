@@ -10,15 +10,17 @@ export default function DockNav({ activeSection = 'hero' }) {
   const [isVisible, setIsVisible] = React.useState(false);
 
   React.useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      // Show navbar if scrolled past the hero screen (around 300px)
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const visible = window.scrollY > 300;
+        setIsVisible((prev) => (prev !== visible ? visible : prev));
+        ticking = false;
+      });
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

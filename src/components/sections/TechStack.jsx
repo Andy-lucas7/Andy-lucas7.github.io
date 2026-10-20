@@ -16,10 +16,10 @@ export default function TechStack() {
   };
 
   return (
-    <section id="tech" style={{ padding: '6rem 0', position: 'relative' }}>
+    <section id="tech" className="tech-section" style={{ padding: '6rem 0', position: 'relative' }}>
       <div className="container">
 
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        <div className="section-header" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-purple)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
             <Cpu size={16} /> Arsenal Tecnológico
           </div>
@@ -33,7 +33,7 @@ export default function TechStack() {
 
         <LogoCarousel />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.75rem' }}>
+        <div className="tech-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.75rem' }}>
           {techCategories.map((category, idx) => {
             const Icon = getCategoryIcon(idx);
 

@@ -5,6 +5,10 @@
   justify-content: center;
   overflow: hidden;
   transition: opacity 0.26s ease-out;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, backdrop-filter;
 }
 
 .glass-surface__filter {

@@ -29,7 +29,10 @@ class Pixel {
 
   draw() {
     const centerOffset = this.maxSizeInteger * 0.5 - this.size * 0.5;
-    this.ctx.fillStyle = this.color;
+    if (this.ctx._lastFillStyle !== this.color) {
+      this.ctx.fillStyle = this.color;
+      this.ctx._lastFillStyle = this.color;
+    }
     this.ctx.fillRect(this.x + centerOffset, this.y + centerOffset, this.size, this.size);
   }
 
