@@ -15,13 +15,13 @@ class WavePixel {
     this.color = colors[Math.floor(Math.random() * colors.length)];
     this.speed = (0.1 + Math.random() * 0.3) * speed;
     this.size = 0;
-    this.sizeStep = 0.1 + Math.random() * 0.35;
+    this.sizeStep = (0.1 + Math.random() * 0.35) * 0.7;
     this.minSize = 0.5;
     this.maxSizeInteger = 3.5;
     this.maxSize = this.minSize + Math.random() * (this.maxSizeInteger - this.minSize);
     this.delay = baseDelay;
     this.counter = 0;
-    this.counterStep = Math.random() * 3 + 1;
+    this.counterStep = (Math.random() * 3 + 1) * 0.7;
     this.isIdle = true;
     this.isReverse = false;
     this.isShimmer = false;
@@ -71,7 +71,7 @@ class WavePixel {
       this.isIdle = true;
       return;
     }
-    this.size -= 0.12;
+    this.size -= 0.084;
   }
 
   shimmer() {
@@ -87,31 +87,26 @@ class WavePixel {
     }
   }
 
-  updateWithWave(waveValue, mouseDist, mouseRadius) {
-    // Interatividade do mouse: desperta os pixels
-    const mouseInfluence = mouseDist < mouseRadius ? (1 - mouseDist / mouseRadius) : 0;
-    const combinedEnergy = waveValue + mouseInfluence * 1.8;
-
-    if (combinedEnergy > 0.45) {
+  updateWithWave(waveValue) {
+    if (waveValue > 0.45) {
       this.appear();
     } else {
       this.disappear();
     }
 
     if (!this.isIdle) {
-      this.draw(combinedEnergy);
+      this.draw(waveValue);
     }
   }
 }
 
 export default function PixelSea({
   gap = 20,
-  speed = 0.0004,
+  speed = 0.00028,
   colors = '#ffffff,#00f0ff,#a855f7,#7dd3fc'
 }) {
   const canvasRef = useRef(null);
   const vignetteCanvasRef = useRef(null);
-  const mouseRef = useRef({ x: -9999, y: -9999, active: false });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -152,7 +147,7 @@ export default function PixelSea({
       for (let x = 0; x < width + gap; x += gap) {
         for (let y = 0; y < height + gap; y += gap) {
           const baseDelay = (Math.sin(x * 0.01) + Math.cos(y * 0.01)) * 5;
-          pixels.push(new WavePixel(canvas, ctx, x, y, colorsArray, 0.04, Math.abs(baseDelay)));
+          pixels.push(new WavePixel(canvas, ctx, x, y, colorsArray, 0.028, Math.abs(baseDelay)));
         }
       }
     };
@@ -169,24 +164,7 @@ export default function PixelSea({
       initGrid();
     };
 
-    const handleMouseMove = (e) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-      mouseRef.current.active = true;
-    };
-
-    const handleMouseLeave = () => {
-      mouseRef.current.active = false;
-      mouseRef.current.x = -9999;
-      mouseRef.current.y = -9999;
-    };
-
     window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
-
-    const mouseRadius = 200;
-    const mouseRadiusSq = mouseRadius * mouseRadius;
 
     const render = () => {
       if (document.hidden) {
@@ -194,16 +172,13 @@ export default function PixelSea({
         return;
       }
 
-      time += 0.025;
+      time += 0.0175;
 
       // Fundo preto absoluto cinematográfico
       ctx.fillStyle = '#030305';
       ctx._lastFillStyle = '#030305';
       ctx.fillRect(0, 0, width, height);
 
-      const mouseX = mouseRef.current.x;
-      const mouseY = mouseRef.current.y;
-      const isMouseActive = mouseRef.current.active;
       const t1 = time * 0.8;
       const t2 = time * 0.6;
       const t3 = time * 0.4;
@@ -220,17 +195,7 @@ export default function PixelSea({
         // Normalizado de 0 a 1
         const waveNormalized = (wave1 + wave2 + wave3 + 3) * 0.16666667;
 
-        let dist = 9999;
-        if (isMouseActive) {
-          const dx = p.x - mouseX;
-          const dy = p.y - mouseY;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < mouseRadiusSq) {
-            dist = Math.sqrt(distSq);
-          }
-        }
-
-        p.updateWithWave(waveNormalized, dist, mouseRadius);
+        p.updateWithWave(waveNormalized);
       }
 
       animId = requestAnimationFrame(render);
@@ -241,8 +206,6 @@ export default function PixelSea({
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [gap, speed, colors]);
 

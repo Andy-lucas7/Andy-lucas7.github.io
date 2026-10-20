@@ -74,7 +74,7 @@ export default function App() {
       {/* Mar de Pixels em Ondas (Baseado na arquitetura da classe Pixel do React Bits) */}
       <PixelSea 
         gap={20}
-        speed={0.0014}
+        speed={0.00098}
         colors="#ffffff,#00f0ff,#a855f7,#7dd3fc"
       />
 
