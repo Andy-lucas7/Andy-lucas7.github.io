@@ -103,15 +103,11 @@ a {
   padding: 1px;
   background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: transform;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
 }
 
 .spotlight-card-wrapper:hover {
-  transform: translate3d(0, -4px, 0);
+  transform: translateY(-4px);
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px -10px var(--accent-cyan-glow);
 }
 
@@ -144,9 +140,6 @@ a {
   padding: 2rem;
   overflow: hidden;
   z-index: 1;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .spotlight-card-glow {
@@ -240,10 +233,7 @@ a {
   position: fixed;
   bottom: 2rem;
   left: 50%;
-  transform: translate3d(-50%, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: transform, opacity;
+  transform: translateX(-50%);
   z-index: 999;
   pointer-events: auto;
 }
@@ -262,10 +252,7 @@ a {
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   cursor: pointer;
   text-decoration: none;
 }
@@ -402,4 +389,184 @@ a {
 .hero-contact-button:hover .btn-icon {
   color: #0ea5e9;
 }
+
+/* =========================================================
+   REORGANIZAÇÃO EXCLUSIVA PARA CELULAR EM MODO RETRATO
+   (Não afeta PC nem celular em modo paisagem)
+   ========================================================= */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .container {
+    padding: 0 1.15rem !important;
+  }
+
+  /* Pílula fixa de perfil no topo esquerdo */
+  .profile-pill-fixed {
+    top: 1rem !important;
+    left: 1rem !important;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding-top: 5.5rem !important;
+    padding-bottom: 2rem !important;
+    min-height: 100svh !important;
+  }
+
+  .hero-role-pill-wrapper {
+    margin-bottom: 1.35rem !important;
+  }
+
+  .hero-role-pill {
+    padding: 0.4rem 0.85rem !important;
+    font-size: 0.72rem !important;
+    gap: 0.45rem !important;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 8.8vw, 2.75rem) !important;
+    line-height: 1.12 !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .hero-bio {
+    font-size: 0.98rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 2rem !important;
+    padding: 0 0.25rem;
+  }
+
+  .hero-actions {
+    flex-direction: column !important;
+    gap: 0.85rem !important;
+    width: 100%;
+    max-width: 290px;
+    margin: 0 auto 2.25rem auto !important;
+  }
+
+  .hero-contact-button,
+  .hero-fluid-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .hero-fluid-btn .glass-surface {
+    width: 100% !important;
+  }
+
+  .hero-scroll-hint {
+    gap: 0.75rem !important;
+    font-size: 0.74rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Seções de Projetos e Tecnologias */
+  .projects-section,
+  .tech-section {
+    padding: 3.75rem 0 !important;
+  }
+
+  .section-header {
+    margin-bottom: 2.25rem !important;
+  }
+
+  .projects-grid,
+  .tech-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .pixel-card {
+    min-height: auto !important;
+    border-radius: 20px !important;
+  }
+
+  .pixel-card-content {
+    padding: 1.5rem !important;
+  }
+
+  .pixel-card .glass-surface {
+    width: 100% !important;
+  }
+
+  .spotlight-card-inner {
+    padding: 1.5rem !important;
+  }
+
+  /* Carrossel de Logos */
+  .logo-carousel-container {
+    margin: 2rem 0 !important;
+  }
+
+  .logo-carousel-track {
+    gap: 2.5rem !important;
+    padding-right: 2.5rem !important;
+  }
+
+  .logo-carousel-item svg {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  /* Contato e Rodapé */
+  .contact-footer {
+    padding: 3.75rem 0 6.5rem 0 !important;
+  }
+
+  .contact-card {
+    padding: 2.5rem 1.25rem !important;
+    margin-bottom: 2.5rem !important;
+    border-radius: 24px !important;
+  }
+
+  .contact-title {
+    font-size: clamp(1.65rem, 6.8vw, 2.2rem) !important;
+    line-height: 1.18 !important;
+  }
+
+  .contact-description {
+    font-size: 0.98rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 1.75rem !important;
+  }
+
+  .contact-actions {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.85rem !important;
+    width: 100%;
+    max-width: 290px;
+    margin: 0 auto !important;
+  }
+
+  .contact-fluid-btn,
+  .contact-fluid-btn .glass-surface {
+    width: 100% !important;
+  }
+
+  .footer-bottom-bar {
+    flex-direction: column !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 1.25rem !important;
+    padding-top: 1.75rem !important;
+  }
+
+  /* Dock Inferior e Modal de Perfil */
+  .dock-container {
+    bottom: 1.15rem !important;
+  }
+
+  .clean-profile-card {
+    width: min(320px, calc(100vw - 2rem)) !important;
+  }
+
+  .cpc-image-container {
+    height: 250px !important;
+  }
+}
+
 

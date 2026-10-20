@@ -32,17 +32,14 @@ export default function ContactFooter() {
           background: '#030305',
           border: '1px solid rgba(255, 255, 255, 0.08)',
           boxShadow: '0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-          overflow: 'hidden',
-          transform: 'translate3d(0, 0, 0)',
-          backfaceVisibility: 'hidden',
-          contain: 'paint'
+          overflow: 'hidden'
         }}>
           {/* Efeito GhostFibers no Background */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, transform: 'translate3d(0, 0, 0)' }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
             <GhostFibers />
           </div>
           {/* Blur de gelo leve sobre os GhostFibers */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', backgroundColor: 'rgba(255, 255, 255, 0.03)', transform: 'translate3d(0, 0, 0)', backfaceVisibility: 'hidden', willChange: 'backdrop-filter' }} />
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, backdropFilter: 'blur(8px)', backgroundColor: 'rgba(255, 255, 255, 0.03)' }} />
 
           <div style={{ position: 'relative', zIndex: 10, maxWidth: '650px', margin: '0 auto' }}>
             <span style={{

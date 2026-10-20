@@ -13,7 +13,7 @@ class WavePixel {
     this.y = y;
     this.colors = colors;
     this.color = colors[Math.floor(Math.random() * colors.length)];
-    this.speed = (0.1 + Math.random() * 0.8) * speed;
+    this.speed = (0.1 + Math.random() * 0.3) * speed;
     this.size = 0;
     this.sizeStep = 0.1 + Math.random() * 0.35;
     this.minSize = 0.5;
@@ -106,7 +106,7 @@ class WavePixel {
 
 export default function PixelSea({
   gap = 20,
-  speed = 0.0014,
+  speed = 0.0004,
   colors = '#ffffff,#00f0ff,#a855f7,#7dd3fc'
 }) {
   const canvasRef = useRef(null);

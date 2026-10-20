@@ -37,12 +37,11 @@ const GlassSurface = ({
   const greenChannelRef = useRef(null);
   const blueChannelRef = useRef(null);
   const gaussianBlurRef = useRef(null);
-  const lastHrefRef = useRef('');
 
   const generateDisplacementMap = () => {
     const rect = containerRef.current?.getBoundingClientRect();
-    const actualWidth = Math.round(rect?.width || 400);
-    const actualHeight = Math.round(rect?.height || 200);
+    const actualWidth = rect?.width || 400;
+    const actualHeight = rect?.height || 200;
     const edgeSize = Math.min(actualWidth, actualHeight) * (borderWidth * 0.5);
 
     const svgContent = `
@@ -68,11 +67,7 @@ const GlassSurface = ({
   };
 
   const updateDisplacementMap = () => {
-    const nextHref = generateDisplacementMap();
-    if (lastHrefRef.current !== nextHref) {
-      lastHrefRef.current = nextHref;
-      feImageRef.current?.setAttribute('href', nextHref);
-    }
+    feImageRef.current?.setAttribute('href', generateDisplacementMap());
   };
 
   useEffect(() => {
