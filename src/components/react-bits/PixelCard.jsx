@@ -138,12 +138,13 @@ const VARIANTS = {
     colors: '#a855f7,#c084fc,#e9d5ff,#ffffff',
     noFocus: false
   },
-  // Família Prism: espectro suave (vermelho, azul, verde e um toque de amarelo)
+  // Família Prism: pixels brancos com pontos de espectro (vermelho, azul, verde e amarelo)
   prism: {
     activeColor: 'rgba(255, 255, 255, 0.14)',
     gap: 6,
     speed: 40,
-    colors: '#fca5a5,#93c5fd,#86efac,#fecaca,#bfdbfe,#bbf7d0,#fde68a',
+    // Maioria branca: as cores aparecem como pontos de espectro sem escurecer o card
+    colors: '#ffffff,#ffffff,#ffffff,#ffffff,#ffffff,#f8fafc,#fca5a5,#93c5fd,#86efac,#fde68a',
     noFocus: false
   },
   pink: {
