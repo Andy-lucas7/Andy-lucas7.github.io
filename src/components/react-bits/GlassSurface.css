@@ -46,29 +46,14 @@
 }
 
 /*
- * Vidro em aparelhos de toque (Chromium): mesmo fundo e mesmas sombras do modo
- * SVG. A refração vira um desfoque leve, equivalente ao feGaussianBlur do filtro
- * (stdDeviation 1.9), e a dispersão cromática das bordas vira um aro vermelho/azul
- * em sombras internas. Tudo composto na GPU em um único passe.
+ * Vidro em aparelhos de toque (Chromium): só um desfoque fosco em um único passe
+ * de GPU, sem a refração SVG, que derrubava o celular para ~20 fps.
  */
 .glass-surface--lite {
-  background: light-dark(hsl(0 0% 100% / var(--glass-frost, 0)), hsl(0 0% 0% / var(--glass-frost, 0)));
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  box-shadow:
-    1px 0 1px -0.5px rgba(255, 70, 90, 0.22) inset,
-    -1px 0 1px -0.5px rgba(70, 140, 255, 0.24) inset,
-    0 1px 1px -0.5px rgba(120, 255, 200, 0.1) inset,
-    0 0 2px 1px light-dark(color-mix(in oklch, black, transparent 85%), color-mix(in oklch, white, transparent 65%))
-      inset,
-    0 0 10px 4px light-dark(color-mix(in oklch, black, transparent 90%), color-mix(in oklch, white, transparent 85%))
-      inset,
-    0px 4px 16px rgba(17, 17, 26, 0.05),
-    0px 8px 24px rgba(17, 17, 26, 0.05),
-    0px 16px 56px rgba(17, 17, 26, 0.05),
-    0px 4px 16px rgba(17, 17, 26, 0.05) inset,
-    0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-    0px 16px 56px rgba(17, 17, 26, 0.05) inset;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .glass-surface--fallback {

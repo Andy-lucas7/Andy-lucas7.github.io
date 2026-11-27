@@ -7,7 +7,7 @@ import './GlassSurface.css';
  * - 'svg': refração real com feDisplacementMap (desktop Chromium)
  * - 'lite': aparelhos de toque com Chromium. O filtro SVG refaz 3 deslocamentos
  *   + blends por frame sobre o fundo animado e derruba o celular para ~20 fps;
- *   aqui o vidro usa as mesmas sombras e fundo, com refração leve em CSS na GPU
+ *   aqui o vidro é só um desfoque fosco em CSS
  * - 'fallback': Safari/Firefox, que não suportam filtro SVG em backdrop-filter
  */
 let glassMode;
