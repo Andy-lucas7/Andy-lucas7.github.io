@@ -45,6 +45,26 @@
     0px 16px 56px rgba(17, 17, 26, 0.05) inset;
 }
 
+/*
+ * Vidro em aparelhos de toque (Chromium): só um desfoque fosco em um único passe
+ * de GPU, sem a refração SVG, que derrubava o celular para ~20 fps.
+ */
+.glass-surface--lite {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/*
+ * Dentro de superfícies que já desfocam o fundo (cards de projeto, card de contato)
+ * um segundo desfoque é visualmente nulo, mas custa um passe extra de GPU por botão.
+ */
+.pixel-card .glass-surface--lite,
+.contact-card .glass-surface--lite {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .glass-surface--fallback {
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);

@@ -138,6 +138,15 @@ const VARIANTS = {
     colors: '#a855f7,#c084fc,#e9d5ff,#ffffff',
     noFocus: false
   },
+  // Família Prism: pixels brancos com pontos de espectro (vermelho, azul, verde e amarelo)
+  prism: {
+    activeColor: 'rgba(255, 255, 255, 0.14)',
+    gap: 6,
+    speed: 40,
+    // Maioria branca; azul, verde e amarelo em saturação máxima; vermelho suave para manter o brilho
+    colors: '#ffffff,#ffffff,#ffffff,#ffffff,#ffffff,#f8fafc,#fca5a5,#0080ff,#00ff00,#ffff00',
+    noFocus: false
+  },
   pink: {
     activeColor: 'rgba(244, 63, 94, 0.25)',
     gap: 6,

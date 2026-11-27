@@ -7,6 +7,7 @@ import { portfolioData } from '../../data/portfolioData';
 
 // Cor do selo "Destaque" alinhada à paleta de cada variante do PixelCard
 const BADGE_COLORS = {
+  prism: '#ffffff',
   cyan: '#00f0ff',
   purple: '#c084fc',
   green: '#22c55e',
@@ -25,7 +26,7 @@ function ProjectCard({ project, index }) {
       gap={7}
       reveal
       revealDelay={(index % 3) * 90}
-      className={project.flagship ? 'is-flagship' : ''}
+      className={[project.flagship && 'is-flagship', project.variant === 'prism' && 'is-prism'].filter(Boolean).join(' ')}
     >
       <div>
         <div className="project-meta">

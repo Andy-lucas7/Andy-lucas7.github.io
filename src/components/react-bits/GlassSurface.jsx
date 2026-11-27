@@ -2,25 +2,31 @@ import { useEffect, useLayoutEffect, useRef, useId } from 'react';
 import './GlassSurface.css';
 
 /**
- * Suporte a filtros SVG em backdrop-filter é uma propriedade do navegador, não da
- * instância: detectado uma única vez por sessão em vez de a cada montagem (o que
- * causava um segundo render de todas as superfícies de vidro).
+ * Modo de renderização do vidro, decidido uma vez por sessão (é propriedade do
+ * navegador/aparelho, não da instância):
+ * - 'svg': refração real com feDisplacementMap (desktop Chromium)
+ * - 'lite': aparelhos de toque com Chromium. O filtro SVG refaz 3 deslocamentos
+ *   + blends por frame sobre o fundo animado e derruba o celular para ~20 fps;
+ *   aqui o vidro é só um desfoque fosco em CSS
+ * - 'fallback': Safari/Firefox, que não suportam filtro SVG em backdrop-filter
  */
-let svgFilterSupport;
-function supportsSVGBackdrop() {
-  if (svgFilterSupport !== undefined) return svgFilterSupport;
-  if (typeof window === 'undefined' || typeof document === 'undefined') return false;
+let glassMode;
+function getGlassMode() {
+  if (glassMode !== undefined) return glassMode;
+  if (typeof window === 'undefined' || typeof document === 'undefined') return 'fallback';
   const ua = navigator.userAgent;
   const isWebkit = /Safari/.test(ua) && !/Chrome/.test(ua);
   const isFirefox = /Firefox/.test(ua);
-  if (isWebkit || isFirefox) {
-    svgFilterSupport = false;
+  const probe = document.createElement('div');
+  probe.style.backdropFilter = 'url(#glass-probe)';
+  if (isWebkit || isFirefox || probe.style.backdropFilter === '') {
+    glassMode = 'fallback';
+  } else if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+    glassMode = 'lite';
   } else {
-    const probe = document.createElement('div');
-    probe.style.backdropFilter = 'url(#glass-probe)';
-    svgFilterSupport = probe.style.backdropFilter !== '';
+    glassMode = 'svg';
   }
-  return svgFilterSupport;
+  return glassMode;
 }
 
 const GlassSurface = ({
@@ -50,7 +56,8 @@ const GlassSurface = ({
   const redGradId = `red-grad-${uniqueId}`;
   const blueGradId = `blue-grad-${uniqueId}`;
 
-  const svgSupported = supportsSVGBackdrop();
+  const mode = getGlassMode();
+  const svgSupported = mode === 'svg';
 
   const containerRef = useRef(null);
   const feImageRef = useRef(null);
@@ -139,7 +146,7 @@ const GlassSurface = ({
   return (
     <div
       ref={containerRef}
-      className={`glass-surface ${svgSupported ? 'glass-surface--svg' : 'glass-surface--fallback'} ${className}`}
+      className={`glass-surface glass-surface--${mode} ${className}`}
       style={containerStyle}
     >
       {svgSupported && (
