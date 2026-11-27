@@ -143,8 +143,8 @@ const VARIANTS = {
     activeColor: 'rgba(255, 255, 255, 0.14)',
     gap: 6,
     speed: 40,
-    // Maioria branca: as cores aparecem como pontos de espectro sem escurecer o card
-    colors: '#ffffff,#ffffff,#ffffff,#ffffff,#ffffff,#f8fafc,#fca5a5,#93c5fd,#86efac,#fde68a',
+    // Maioria branca; os coloridos em saturação máxima (HSL 100%) como pontos de espectro
+    colors: '#ffffff,#ffffff,#ffffff,#ffffff,#ffffff,#f8fafc,#ff0000,#0080ff,#00ff00,#ffff00',
     noFocus: false
   },
   pink: {
