@@ -604,6 +604,18 @@ a {
   color: var(--text-primary);
 }
 
+/*
+ * Os pixels do PixelCard só aparecem com o card ativo (hover/toque/foco): é só
+ * nesse momento que os fundos de texto precisam desfocar o que está atrás.
+ * Fora disso o fundo já chega desfocado pelo próprio card, e o blur seria um
+ * passe de GPU a mais por chip, recalculado a cada frame do fundo animado.
+ */
+.pixel-card:hover :is(.tag, .project-metric),
+.pixel-card:focus-within :is(.tag, .project-metric) {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
 .project-cta {
   width: 100%;
 }
