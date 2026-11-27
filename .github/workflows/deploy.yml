@@ -2,24 +2,33 @@ name: Deploy Portfolio
 
 on:
   push:
-    branches: [main] # ou master, dependendo da sua branch principal
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Um deploy por vez; um push novo cancela o deploy anterior ainda em andamento
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Instalar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Instalar dependências
@@ -28,10 +37,13 @@ jobs:
       - name: Compilar o projeto (Build)
         run: npm run build
 
+      # upload-pages-artifact e deploy-pages precisam estar na mesma geração:
+      # a v4 do deploy não encontrava o artifact enviado pela v3 do upload
       - name: Fazer o upload do build para o Pages
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
-          path: dist # Alinha com a pasta gerada pelo Vite
+          path: dist
 
       - name: Deploy no GitHub Pages
-        uses: actions/deploy-pages@v4
+        id: deployment
+        uses: actions/deploy-pages@v5
