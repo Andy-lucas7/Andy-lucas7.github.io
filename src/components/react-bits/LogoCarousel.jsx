@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useInView } from '../../hooks/useInView';
 import './LogoCarousel.css';
 import { 
   SiGit, 
@@ -20,15 +21,20 @@ const logos = [
   { icon: SiPostgresql, name: 'PostgreSQL' },
 ];
 
+// Renderizado 3 vezes para garantir a fluidez da rolagem infinita
+const track = [...logos, ...logos, ...logos];
+
 export default function LogoCarousel() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { rootMargin: '100px 0px' });
+
   return (
-    <div className="logo-carousel-container">
-      <div className="logo-carousel-track">
-        {/* Renderizado 3 vezes para garantir a fluidez da rolagem infinita */}
-        {[...logos, ...logos, ...logos].map((logo, index) => {
+    <div ref={ref} className="logo-carousel-container">
+      <div className="logo-carousel-track" style={{ animationPlayState: inView ? 'running' : 'paused' }}>
+        {track.map((logo, index) => {
           const IconComponent = logo.icon;
           return (
-            <div key={index} className="logo-carousel-item" style={{ color: '#ffffff' }} title={logo.name}>
+            <div key={index} className="logo-carousel-item" title={logo.name} aria-hidden={index >= logos.length || undefined}>
               <IconComponent size={56} />
             </div>
           );

@@ -1,78 +1,68 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import { useRevealClass } from '../ui/Reveal';
 
 /**
  * SpotlightCard - React Bits Component
  * Card com iluminação direcional radial que segue o cursor do mouse,
  * destacando a borda e o fundo com gradientes cibernéticos.
+ *
+ * A posição do cursor é escrita direto em custom properties (sem estado React)
+ * e a visibilidade do holofote vem de :hover no CSS: mover o mouse não
+ * re-renderiza o componente.
  */
 export default function SpotlightCard({
   children,
   className = '',
   spotlightColor = 'rgba(0, 240, 255, 0.25)',
   borderColor = 'rgba(0, 240, 255, 0.8)',
+  reveal = false,
+  revealDelay = 0,
   style = {},
   ...props
 }) {
   const cardRef = useRef(null);
-  const rafRef = useRef(null);
-  const [opacity, setOpacity] = useState(0);
+  const rafRef = useRef(0);
+  const revealClass = useRevealClass(cardRef, reveal);
 
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const clientX = e.clientX;
-    const clientY = e.clientY;
-
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+  const handlePointerMove = (e) => {
+    const { clientX, clientY } = e;
+    cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(() => {
-      if (!cardRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-      cardRef.current.style.setProperty('--mouse-x', `${clientX - rect.left}px`);
-      cardRef.current.style.setProperty('--mouse-y', `${clientY - rect.top}px`);
+      const card = cardRef.current;
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mouse-x', `${clientX - rect.left}px`);
+      card.style.setProperty('--mouse-y', `${clientY - rect.top}px`);
     });
-
-    if (opacity !== 1) setOpacity(1);
   };
 
-  const handleMouseLeave = () => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    setOpacity(0);
-  };
+  const handlePointerLeave = () => cancelAnimationFrame(rafRef.current);
 
   return (
     <div
       ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className={`spotlight-card-wrapper ${className}`}
+      onPointerMove={handlePointerMove}
+      onPointerDown={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className={`spotlight-card-wrapper ${revealClass} ${className}`.trim()}
       style={{
         '--mouse-x': '-1000px',
         '--mouse-y': '-1000px',
+        '--spotlight-border': borderColor,
+        '--spotlight-fill': spotlightColor,
+        ...(revealDelay ? { '--reveal-delay': `${revealDelay}ms` } : null),
         ...style
       }}
       {...props}
     >
       {/* Borda iluminada pelo holofote */}
-      <div 
-        className="spotlight-card-border"
-        style={{
-          opacity: opacity,
-          background: `radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), ${borderColor}, transparent 70%)`
-        }}
-      />
+      <div className="spotlight-card-border" />
 
       {/* Conteúdo do Card */}
       <div className="spotlight-card-inner">
         {/* Luz de preenchimento interna suave */}
-        <div 
-          className="spotlight-card-glow"
-          style={{
-            opacity: opacity,
-            background: `radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), ${spotlightColor}, transparent 75%)`
-          }}
-        />
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          {children}
-        </div>
+        <div className="spotlight-card-glow" />
+        <div className="spotlight-card-body">{children}</div>
       </div>
     </div>
   );

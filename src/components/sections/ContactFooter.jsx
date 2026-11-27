@@ -34,12 +34,12 @@ export default function ContactFooter() {
           boxShadow: '0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
           overflow: 'hidden'
         }}>
-          {/* Efeito GhostFibers no Background */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
+          {/* Efeito GhostFibers no Background (pausa sozinho fora da viewport) */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
             <GhostFibers />
           </div>
           {/* Blur de gelo leve sobre os GhostFibers */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, backdropFilter: 'blur(8px)', backgroundColor: 'rgba(255, 255, 255, 0.03)' }} />
+          <div style={{ position: 'absolute', inset: 0, zIndex: 1, backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', backgroundColor: 'rgba(255, 255, 255, 0.03)' }} />
 
           <div style={{ position: 'relative', zIndex: 10, maxWidth: '650px', margin: '0 auto' }}>
             <span style={{
@@ -66,7 +66,6 @@ export default function ContactFooter() {
             <div className="contact-actions" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
               <FluidGlassButton
                 href={socialLinks.find(l => l.name === 'Email')?.url || "#"}
-                variant="primary"
                 icon={Mail}
                 className="contact-fluid-btn"
               >
@@ -75,7 +74,8 @@ export default function ContactFooter() {
 
               <FluidGlassButton
                 href={socialLinks.find(l => l.name === 'GitHub')?.url || "#"}
-                variant="secondary"
+                target="_blank"
+                rel="noopener noreferrer"
                 icon={ArrowUpRight}
                 className="contact-fluid-btn"
               >
@@ -105,37 +105,17 @@ export default function ContactFooter() {
           </div>
 
           <div style={{ display: 'flex', gap: '0.75rem' }}>
-            {socialLinks.map((link, idx) => {
+            {socialLinks.map((link) => {
               const Icon = getIcon(link.icon);
+              const external = !link.url.startsWith('mailto:');
               return (
                 <a
-                  key={idx}
+                  key={link.name}
                   href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={external ? '_blank' : undefined}
+                  rel={external ? 'noopener noreferrer' : undefined}
                   aria-label={link.name}
-                  style={{
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.09)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--text-secondary)',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#00f0ff';
-                    e.currentTarget.style.borderColor = 'rgba(0, 240, 255, 0.4)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'var(--text-secondary)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.09)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
+                  className="social-link"
                 >
                   <Icon size={18} />
                 </a>

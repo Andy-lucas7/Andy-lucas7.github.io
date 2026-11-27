@@ -7,7 +7,6 @@
 }
 
 .clean-profile-card {
-  width: 100%;
   width: 320px;
   background-color: #262626;
   border-radius: 36px;
@@ -55,6 +54,14 @@
   font-weight: 600;
   letter-spacing: -0.5px;
   color: #ffffff;
+}
+
+.cpc-company-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  margin-left: 6px;
+  object-fit: cover;
 }
 
 .cpc-bio {
