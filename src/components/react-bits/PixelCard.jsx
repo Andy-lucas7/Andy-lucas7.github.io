@@ -143,8 +143,8 @@ const VARIANTS = {
     activeColor: 'rgba(255, 255, 255, 0.14)',
     gap: 6,
     speed: 40,
-    // Maioria branca; os coloridos em saturação máxima (HSL 100%) como pontos de espectro
-    colors: '#ffffff,#ffffff,#ffffff,#ffffff,#ffffff,#f8fafc,#ff0000,#0080ff,#00ff00,#ffff00',
+    // Maioria branca; azul, verde e amarelo em saturação máxima; vermelho suave para manter o brilho
+    colors: '#ffffff,#ffffff,#ffffff,#ffffff,#ffffff,#f8fafc,#fca5a5,#0080ff,#00ff00,#ffff00',
     noFocus: false
   },
   pink: {
