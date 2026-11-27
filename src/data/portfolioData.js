@@ -29,9 +29,9 @@ export const portfolioData = {
       subtitle: "Wallpapers vivos para Windows",
       description: "Transforma o desktop do Windows em um lugar vivo: wallpapers animados, widgets de vidro e cenas 3D criados no próprio Studio e exibidos por um motor nativo leve, que roda atrás dos ícones sem pesar no PC.",
       tags: ["Rust", "wgpu / DX12", "Tauri", "React", "Three.js", "WGSL"],
-      metrics: "Windows 10/11",
+      metrics: "200 mil partículas em tempo real",
       family: "Família Prism",
-      variant: "cyan",
+      variant: "prism",
       flagship: true,
       featured: true,
       repoUrl: "https://github.com/Andy-lucas7/PrismView"
@@ -42,9 +42,9 @@ export const portfolioData = {
       subtitle: "Tela de bloqueio óptica para Android",
       description: "Estúdio para criar telas de bloqueio, telas iniciais e widgets no Android com efeito de vidro líquido em 120Hz, papéis de parede em vídeo, profundidade 3D na foto e textos dinâmicos com hora, clima e bateria.",
       tags: ["Kotlin", "Jetpack Compose", "AGSL", "ML Kit", "Android"],
-      metrics: "Android 13+",
+      metrics: "Vidro líquido AGSL a 120Hz",
       family: "Família Prism",
-      variant: "purple",
+      variant: "prism",
       flagship: true,
       featured: true,
       repoUrl: "https://github.com/Andy-lucas7/PrismLock"

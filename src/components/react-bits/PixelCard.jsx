@@ -138,6 +138,14 @@ const VARIANTS = {
     colors: '#a855f7,#c084fc,#e9d5ff,#ffffff',
     noFocus: false
   },
+  // Família Prism: espectro suave (vermelho, azul, verde e um toque de amarelo)
+  prism: {
+    activeColor: 'rgba(255, 255, 255, 0.14)',
+    gap: 6,
+    speed: 40,
+    colors: '#fca5a5,#93c5fd,#86efac,#fecaca,#bfdbfe,#bbf7d0,#fde68a',
+    noFocus: false
+  },
   pink: {
     activeColor: 'rgba(244, 63, 94, 0.25)',
     gap: 6,

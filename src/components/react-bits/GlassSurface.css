@@ -51,9 +51,18 @@
  */
 .glass-surface--lite {
   background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/*
+ * Dentro de superfícies que já desfocam o fundo (cards de projeto, card de contato)
+ * um segundo desfoque é visualmente nulo, mas custa um passe extra de GPU por botão.
+ */
+.pixel-card .glass-surface--lite,
+.contact-card .glass-surface--lite {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .glass-surface--fallback {
