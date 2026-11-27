@@ -8,5 +8,17 @@ export default defineConfig({
   server: {
     port: 3000,
     open: false
+  },
+  build: {
+    target: 'es2020',
+    rollupOptions: {
+      output: {
+        // Bibliotecas em chunks próprios: mudar o conteúdo do site não invalida o cache delas
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          motion: ['framer-motion']
+        }
+      }
+    }
   }
 });

@@ -2,6 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import './ProfileCard.css';
 import { Users, FolderGit2 } from 'lucide-react';
 
+const FALLBACK_REPOS = '20+';
+// Contagem de repositórios guardada por sessão: reabrir o modal não refaz a requisição
+let reposCache;
+
 export default function ProfileCard({
   avatarUrl = '/avatar.jpg',
   name = 'Lucas Andrey',
@@ -11,74 +15,71 @@ export default function ProfileCard({
   onContactClick
 }) {
   const cardRef = useRef(null);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [reposCount, setReposCount] = useState('...');
+  const frameRef = useRef(0);
+  const [reposCount, setReposCount] = useState(reposCache ?? '...');
 
   useEffect(() => {
-    fetch(`https://api.github.com/users/${handle}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.public_repos !== undefined) {
-          setReposCount(data.public_repos);
-        } else {
-          setReposCount('20+');
-        }
+    if (reposCache !== undefined) return undefined;
+    const controller = new AbortController();
+    fetch(`https://api.github.com/users/${handle}`, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+      .then((data) => {
+        reposCache = data.public_repos ?? FALLBACK_REPOS;
+        setReposCount(reposCache);
       })
-      .catch(() => setReposCount('20+'));
+      .catch((err) => {
+        if (err?.name !== 'AbortError') setReposCount(FALLBACK_REPOS);
+      });
+    return () => controller.abort();
   }, [handle]);
 
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const clientX = e.clientX;
-    const clientY = e.clientY;
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+  useEffect(() => () => cancelAnimationFrame(frameRef.current), []);
 
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
-
-    card.style.transition = 'transform 0.1s ease';
-    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
+  // Tilt 3D: uma leitura de layout + uma escrita de transform por frame, no máximo
+  const handlePointerMove = (e) => {
+    const { clientX, clientY } = e;
+    cancelAnimationFrame(frameRef.current);
+    frameRef.current = requestAnimationFrame(() => {
+      const card = cardRef.current;
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((clientY - rect.top - centerY) / centerY) * -10;
+      const rotateY = ((clientX - rect.left - centerX) / centerX) * 10;
+      card.style.transition = 'transform 0.1s ease';
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
+    });
   };
 
-  const handleMouseLeave = () => {
-    if (!cardRef.current) return;
-    cardRef.current.style.transition = 'transform 0.5s ease';
-    cardRef.current.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
+  const handlePointerLeave = () => {
+    cancelAnimationFrame(frameRef.current);
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.transition = 'transform 0.5s ease';
+    card.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
   };
 
   return (
     <div
       className="clean-profile-wrapper"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       style={{ perspective: '1000px' }}
     >
       <div
         ref={cardRef}
         className="clean-profile-card"
-        style={{
-          transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-          transition: rotation.x === 0 && rotation.y === 0 ? 'transform 0.5s ease' : 'transform 0.1s ease'
-        }}
+        style={{ transform: 'rotateX(0deg) rotateY(0deg)', transition: 'transform 0.5s ease' }}
       >
         <div className="cpc-image-container">
-          <img src={avatarUrl} alt={name} className="cpc-image" />
+          <img src={avatarUrl} alt={name} className="cpc-image" decoding="async" />
         </div>
 
         <div className="cpc-content">
           <div className="cpc-header">
             <h3>{name}</h3>
-            {/* Logo Natura Uploaded */}
-            <img 
-              src="/natura-logo.jpg" 
-              alt="Natura Logo" 
-              style={{ width: '32px', height: '32px', borderRadius: '6px', marginLeft: '6px', objectFit: 'cover' }} 
-            />
+            <img src="/natura-logo.jpg" alt="Natura" className="cpc-company-logo" width="32" height="32" decoding="async" />
           </div>
 
           <p className="cpc-bio">
@@ -95,7 +96,7 @@ export default function ProfileCard({
               </div>
             </div>
 
-            <button className="cpc-button" onClick={onContactClick}>
+            <button type="button" className="cpc-button" onClick={onContactClick}>
               {contactText}
             </button>
           </div>

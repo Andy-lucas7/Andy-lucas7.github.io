@@ -15,7 +15,6 @@ export default function DecryptedText({
   style = {}
 }) {
   const [displayText, setDisplayText] = useState(text);
-  const [isHovered, setIsHovered] = useState(false);
   const intervalRef = useRef(null);
 
   const startDecryption = () => {
@@ -48,20 +47,18 @@ export default function DecryptedText({
   useEffect(() => {
     startDecryption();
     return () => clearInterval(intervalRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
 
   const handleMouseEnter = () => {
-    if (triggerOnHover) {
-      setIsHovered(true);
-      startDecryption();
-    }
+    if (triggerOnHover) startDecryption();
   };
 
   return (
     <span
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsHovered(false)}
       className={className}
+      aria-label={text}
       style={{
         fontFamily: 'var(--font-mono)',
         letterSpacing: '0.02em',

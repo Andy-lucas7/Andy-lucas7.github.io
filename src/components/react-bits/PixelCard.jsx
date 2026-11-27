@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useRevealClass } from '../ui/Reveal';
 import './PixelCard.css';
 
 class Pixel {
@@ -146,9 +147,22 @@ const VARIANTS = {
   }
 };
 
-export default function PixelCard({ variant = 'default', gap, speed, colors, noFocus, className = '', style = {}, children }) {
+export default function PixelCard({
+  variant = 'default',
+  gap,
+  speed,
+  colors,
+  noFocus,
+  reveal = false,
+  revealDelay = 0,
+  className = '',
+  style = {},
+  children
+}) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
+  const ctxRef = useRef(null);
+  const revealClass = useRevealClass(containerRef, reveal);
   const pixelsRef = useRef([]);
   const animationRef = useRef(null);
   const timePreviousRef = useRef(performance.now());
@@ -171,6 +185,7 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
     if (width === 0 || height === 0) return;
 
     const ctx = canvasRef.current.getContext('2d');
+    ctxRef.current = ctx;
 
     canvasRef.current.width = width;
     canvasRef.current.height = height;
@@ -203,10 +218,11 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
     if (timePassed < timeInterval) return;
     timePreviousRef.current = timeNow - (timePassed % timeInterval);
 
-    const ctx = canvasRef.current?.getContext('2d');
-    if (!ctx || !canvasRef.current) return;
+    const ctx = ctxRef.current;
+    const canvas = canvasRef.current;
+    if (!ctx || !canvas) return;
 
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     let allIdle = true;
     for (let i = 0; i < pixelsRef.current.length; i++) {
@@ -218,6 +234,7 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
     }
     if (allIdle) {
       cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
     }
   };
 
@@ -239,7 +256,16 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
 
   useEffect(() => {
     initPixels();
-    const observer = new ResizeObserver(() => {
+    // Só recria a grade quando o tamanho inteiro muda (ResizeObserver também dispara
+    // na montagem e em mudanças sub-pixel durante rolagem no mobile)
+    let lastW = 0;
+    let lastH = 0;
+    const observer = new ResizeObserver(([entry]) => {
+      const w = Math.floor(entry.contentRect.width);
+      const h = Math.floor(entry.contentRect.height);
+      if (w === lastW && h === lastH) return;
+      lastW = w;
+      lastH = h;
       initPixels();
     });
     if (containerRef.current) {
@@ -255,7 +281,7 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
   return (
     <div
       ref={containerRef}
-      className={`pixel-card ${className}`}
+      className={`pixel-card ${revealClass} ${className}`.trim()}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onFocus={finalNoFocus ? undefined : onFocus}
@@ -263,10 +289,11 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
       tabIndex={finalNoFocus ? -1 : 0}
       style={{
         '--pixel-card-active-color': variantCfg.activeColor,
+        ...(revealDelay ? { '--reveal-delay': `${revealDelay}ms` } : null),
         ...style
       }}
     >
-      <canvas className="pixel-canvas" ref={canvasRef} />
+      <canvas className="pixel-canvas" ref={canvasRef} aria-hidden="true" />
       <div className="pixel-card-content">
         {children}
       </div>
